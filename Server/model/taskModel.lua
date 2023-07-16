@@ -1,5 +1,6 @@
 local sql = require("resty.sql")
 local config = require("config")
+local errorHandling = require("errorHandling")
 
 --Generic function to connect to the database
 local function connectToDatabase()
@@ -16,12 +17,11 @@ local function connectToDatabase()
 
     if not ok then
         -- Handle the connection error
-        return nil, "Connection error: " .. err
+        return nil, errorHandling.handleConnectionError(err)
     end
 end
 
 local taskModel = {}
-
 
 --Create a new task
 function taskModel.createTask(task)
@@ -38,7 +38,7 @@ function taskModel.createTask(task)
 
     if not response then
         -- Handle the query error
-        return nil, "Query execution error: " .. err
+        return nil, errorHandling.handleQueryError(err)
     end
 
     db:close()
@@ -59,11 +59,10 @@ function taskModel.fetchTasks(userId)
     if userId then
         query = string.format([[SELECT * FROM Task WHERE userId = %d]], userId)
     end
-
     local response, err, errcode, sqlstate = db:query(query)
     if not response then
         -- Handle the query error
-        return nil, "Query execution error: " .. err
+        return nil, errorHandling.handleQueryError(err)
     end
 
     db:close()
@@ -84,7 +83,7 @@ function taskModel.fetchTaskById(taskId)
 
     if not response then
         -- Handle the query error
-        return nil, "Query execution error: " .. err
+        return nil, errorHandling.handleQueryError(err)
     end
 
     db:close()
@@ -107,7 +106,7 @@ function taskModel.updateTaskById(taskId, task)
     local response, err, errcode, sqlstate = db:query(query)
     if not response then
         -- Handle the query error
-        return nil, "Query execution error: " .. err
+        return nil, errorHandling.handleQueryError(err)
     end
 
     db:close()
@@ -129,7 +128,7 @@ function taskModel.deleteTaskByID(taskId)
 
     if not response then
         -- Handle the query error
-        return nil, "Query execution error: " .. err
+        return nil, errorHandling.handleQueryError(err)
     end
 
     db:close()

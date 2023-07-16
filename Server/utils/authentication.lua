@@ -5,9 +5,10 @@ local userModel = require("model.userModel")
 local authentication = {}
 
 -- Function to generate a JWT token
-function authentication.createToken(userId)
+function authentication.createToken(username, password)
     local payload = {
-        userId = userId,
+        username = username,
+        password = password,
         exp = os.time() + config.jwt.expiresIn
     }
 
