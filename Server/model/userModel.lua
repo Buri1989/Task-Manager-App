@@ -45,8 +45,8 @@ function userModel.createUser(user)
     return response.insert_id
 end
 
---Get a user by his username
-function userModel.authenticateUser(username, password)
+--Authenticate a user by id
+function userModel.authenticateUserById(userId)
     --Using a function to connect to the database
     local db = connectToDatabase()
     if not db then
@@ -55,7 +55,7 @@ function userModel.authenticateUser(username, password)
     end
 
     -- Query the User table to check if the username and password match
-    local query = string.format([[SELECT * FROM User WHERE username = '%s' AND password = '%s']], username, password)
+    local query = string.format([[SELECT * FROM User WHERE id = %d]], userId)
     local response, err, errcode, sqlstate = db:query(query)
 
     if not response then
@@ -65,7 +65,7 @@ function userModel.authenticateUser(username, password)
 
     db:close()
 
-    -- If the result is not empty, authentication is successful
+    -- If the result is not empty, authentication is successful and the user exists
     return #response > 0
 end
 
