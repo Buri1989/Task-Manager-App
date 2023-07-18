@@ -12,6 +12,18 @@ interface Task {
 class TaskStore {
   @observable tasks: Task[] = [];
 
+  generateUniqueId(): number {
+    /*Generate a random number between 1 and 10000 to be a unique Id for tasks*/
+    const randomNumber = Math.floor(Math.random() * 10000) + 1;
+    /*Check if the generated unique Id is already used in the tasks */
+    const isDuplicateId = this.tasks.some((task) => task.id === randomNumber);
+    /*If the Id is duplicate, recursively call the function again and again to generate a new Id */
+    if (isDuplicateId) {
+      return this.generateUniqueId();
+    }
+    return randomNumber;
+  }
+
   @computed get completedTasksCounter(): number {
     return this.tasks.filter((task) => task.completed).length;
   }
@@ -26,6 +38,8 @@ class TaskStore {
   });
 
   @action createTask = flow(function* (this: TaskStore, task: Task) {
+    /*Check if a task already exists  */
+    task.id = this.generateUniqueId();
     try {
       const response = yield axios.post("http://localhost:8080/task", task);
       const createNewTask = response.data;

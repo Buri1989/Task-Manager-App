@@ -1,6 +1,6 @@
 local sql = require("resty.sql")
 local config = require("config")
-local errorHandling = require("errorHandling")
+local errorHandling = require("utils.errorHandling")
 
 --Generic function to connect to the database
 local function connectToDatabase()
