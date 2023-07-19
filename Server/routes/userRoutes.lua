@@ -4,7 +4,7 @@ local authentication = require("utils.jwt")
 
 local routes = router.new()
 
-routes:post("/", userBLL.createUser)
+routes:post("/signup", userBLL.createUser)
 routes:post("/auth", userBLL.authenticateUser)
 routes:post("/tasks", authentication.authenticateRequest, userBLL.createTask)
 routes:put("/tasks/:taskId", authentication.authenticateRequest, userBLL.updateTask)
