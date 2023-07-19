@@ -6,9 +6,9 @@ local config = {
     database = {
         host = "localhost",
         port = 3306,
-        username = "root",         --Remove the username when done
-        password = "Boris1898!",   --Remove the password when done
-        database = "task manager", --Dont forget to export it and put in github also
+        username = "username", --Remove the username when done
+        password = "password", --Remove the password when done
+        database = "task manager",
     },
     jwt      = {
         jwtSecret = "secretkey",
