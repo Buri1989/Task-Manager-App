@@ -34,4 +34,10 @@ function errorHandling.handleAuthorizationError(err)
     return errorHandling.formatError(403, message)
 end
 
+-- Function to handle token errors
+function errorHandling.handleTokenError(err)
+    local message = "Token error: " .. err
+    return errorHandling.formatError(401, message)
+end
+
 return errorHandling

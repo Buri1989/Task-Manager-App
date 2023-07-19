@@ -32,8 +32,8 @@ function taskModel.createTask(task)
     end
     --Insert the task into the Task table , associating it with the specified userId
     local response, err, errcode, sqlstate = db:querty(string.format([[
-        INSER INTO Task (title,description,completed,userId)VALUES('%s','%s',%d,%d)
-    ]], task.title, task.description, task.completed and 1 or 0, task.userId))
+        INSER INTO Task (title,description,completed,userTaskId)VALUES('%s','%s',%d,%d)
+    ]], task.title, task.description, task.completed and 1 or 0, task.userTaskId))
 
     if not response then
         -- Handle the query error
@@ -99,7 +99,7 @@ function taskModel.fetchTasksWithUsername()
     local query = [[
         SELECT Task.*,User.username
         FROM Task
-        JOIN User ON Task.userId=User.userId]]
+        JOIN User ON Task.userTaskId=User.userId]]
 
     local response, err, errcode, sqlstate = db.query(query)
     if not response then
