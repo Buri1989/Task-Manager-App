@@ -31,16 +31,31 @@ function taskBLL.createTask(req, res, next)
     res.status(201).json({ message = "Task created successfully", taskId = taskId })
 end
 
+--Function to get all the tasks along with the usernames
+function taskBLL.getTasksWithUsername(req, res, next)
+    -- Retrieve the tasks along with the associated username using taskModel.fetchTasksWithUsername
+    local tasksWithUsername, err = taskModel.fetchTasksWithUsername()
+    if not tasksWithUsername then
+        -- Handle the error from taskModel
+        res.status(500).json(errorHandling.formatError(500, "Failed to retrieve tasks: " .. err))
+    end
+
+    --Filter the taks based on the provided userId if available
+    local userId = req.query.userId
+    if userId then
+        tasksWithUsername = tasksWithUsername.filter(function(task)
+            return task.userId == userId
+        end)
+    end
+
+    --Send the tasks in the response
+    res.status(200).json(tasksWithUsername)
+end
+
 -- Function to retrieve all tasks
 function taskBLL.getTasks(req, res, next)
-    local userId = req.query.userId
-    -- Check if a userId is provided in the query parameters
-    if not userId then
-        res.status(400).json(errorHandling.formatError(400, "Missing userId in query parameters"))
-        return
-    end
     -- Retrieve the tasks using taskModel.getTasks
-    local tasks, err = taskModel.fetchTasks(userId)
+    local tasks, err = taskModel.fetchTasks()
     if not tasks then
         -- Handle the error from taskModel
         res.status(500).json(errorHandling.formatError(500, "Failed to retrieve tasks: " .. err))

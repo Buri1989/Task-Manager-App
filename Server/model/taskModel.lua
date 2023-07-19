@@ -14,7 +14,6 @@ local function connectToDatabase()
         user = config.database.username,
         password = config.database.password
     })
-
     if not ok then
         -- Handle the connection error
         return nil, errorHandling.handleConnectionError(err)
@@ -46,7 +45,7 @@ function taskModel.createTask(task)
 end
 
 --Get all the task from the DB
-function taskModel.fetchTasks(userId)
+function taskModel.fetchTasks()
     --Using a function to connect to the database
     local db = connectToDatabase()
     if not db then
@@ -56,9 +55,6 @@ function taskModel.fetchTasks(userId)
 
     --Fetching all tasks associated with the specified userId or all tasks if userId is not provided
     local query = [[SELECT * FROM Task]]
-    if userId then
-        query = string.format([[SELECT * FROM Task WHERE userId = %d]], userId)
-    end
     local response, err, errcode, sqlstate = db:query(query)
     if not response then
         -- Handle the query error
@@ -88,6 +84,31 @@ function taskModel.fetchTaskById(taskId)
 
     db:close()
     return response[1] -- Assuming id is unique, return the first (and only) result
+end
+
+--Get all tasks from the DB with the associated username
+function taskModel.fetchTasksWithUsername()
+    --Using a function to connect to the database
+    local db = connectToDatabase()
+    if not db then
+        -- Handle the connection error
+        return nil, "Failed to connect to the database."
+    end
+
+    --Fetch all task from the task table with the associated username from the user table
+    local query = [[
+        SELECT Task.*,User.username
+        FROM Task
+        JOIN User ON Task.userId=User.userId]]
+
+    local response, err, errcode, sqlstate = db.query(query)
+    if not response then
+        -- Handle the query error
+        return nil, errorHandling.handleQueryError(err)
+    end
+
+    db.close()
+    return response
 end
 
 --Update task by task id

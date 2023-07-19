@@ -6,6 +6,7 @@ local routes = router.new()
 
 routes:post("/", taskBLL.createTask)
 routes:get("/", taskBLL.getTasks)
+router:get("/withUsername", taskBLL.getTasksWithUsername)
 routes:get("/:id", taskBLL.getTask)
 routes:put("/:id", taskBLL.updateTask)
 routes:delete("/:id", taskBLL.deleteTask)
