@@ -7,7 +7,7 @@ local jwtUtil = {}
 
 -- Generate a new JWT token
 function jwtUtil.generateToken(username, password)
-    local jwtSecret = config.jwt.secret
+    local jwtSecret = config.jwt.jwtSecret
     local jwtAlgorithm = config.jwt.algorithm
     local jwtExpiration = config.jwt.expiration
 
@@ -35,7 +35,7 @@ end
 
 -- Verify the JWT for authentication
 function jwtUtil.verifyToken(token)
-    local jwtSecret = config.jwt.secret
+    local jwtSecret = config.jwt.jwtSecret
 
     local verifiedToken = jwt:verify(jwtSecret, token)
 
